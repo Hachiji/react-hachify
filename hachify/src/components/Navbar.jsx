@@ -125,7 +125,13 @@ const Navbar = () => {
                                     }}
                                     className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-indigo-500 rounded-md hover:bg-indigo-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis min-w-0"
                                 >
-                                    <FiUser className="text-amber-300 flex-shrink-0" />
+                                    <>
+                                    {user?.email === "doro-chan@gmail.com" ? (
+                                        <img src="src/img/doro-icon.png" alt="doro profile" className="flex-shrink-0 size-7 rounded-full" />
+                                            ) : (
+                                                    <FiUser className="text-amber-300 flex-shrink-0 h-5 w-5" />
+                                                )}
+                                    </>
                                     <span className="truncate">{getUsernameFromEmail(user.email)}</span>
                                 </button>
                             </div>
@@ -139,15 +145,17 @@ const Navbar = () => {
                             </a>
                         )}
                     </li>
-                    <li>
-                        <button 
-                            id="cart-button"
-                            onClick={toggleCart}
-                            className="p-2 cursor-pointer hover:text-rose-500 transition-all duration-200 hidden md:block"
-                        >
-                            <FiShoppingCart className="size-6 md:size-7 hover:animate-bounce"/>
-                        </button>
-                    </li>
+                    {user?.email !== "doro-chan@gmail.com" && (
+                        <li>
+                            <button 
+                                id="cart-button"
+                                onClick={toggleCart}
+                                className="p-2 cursor-pointer hover:text-rose-500 transition-all duration-200 hidden md:block"
+                            >
+                                <FiShoppingCart className="size-6 md:size-7 hover:animate-bounce"/>
+                            </button>
+                        </li>
+                    )}
                 </div>
             </nav>
 

@@ -1,8 +1,10 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth'
 import { auth } from '../config/Firebase'
 import { FiEye, FiEyeOff } from 'react-icons/fi'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useAuthState } from 'react-firebase-hooks/auth'
+import { useNavigate } from 'react-router-dom'
 
 const Auth = () => {
     const [email, setEmail] = useState('');
@@ -12,7 +14,28 @@ const Auth = () => {
     const [direction, setDirection] = useState(1);
     const [isAuth, setIsAuth] = useState(false);
     const [formToggle, setFormToggle] = useState(true);
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
+
+    const [user, loading] = useAuthState(auth);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(!loading && user) {
+            if (user) {
+                navigate('/', { replace: true });
+            }
+        }
+    }, [user,loading,navigate])
+
+    if(loading) {
+        return (
+            <div className="flex flex-grow justify-center items-center mt-20">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            </div>
+        )
+    }
+
+    if (user) return null;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -29,7 +52,7 @@ const Auth = () => {
         } catch (err) {
             handleAuthError(err);
         } finally {
-            setIsLoading(false)
+            setIsLoading(false);
         }
 
     };
@@ -50,7 +73,7 @@ const Auth = () => {
                 setError('Password should be at least 6 characters');
                 break;
             case 'auth/wrong-password':
-            case 'auth/invalid-credential':  // New error code for wrong credentials
+            case 'auth/invalid-credential':
                 setError('Incorrect email or password');
                 break;
             case 'auth/network-request-failed':

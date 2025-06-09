@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { collection, onSnapshot } from 'firebase/firestore'
-import { db } from '../config/Firebase'
+import { db, auth } from '../config/Firebase'
 import { useCart } from '../context/CartContext'
 import ProductCard from '../components/ProductCard'
 
@@ -8,12 +8,14 @@ import { Link } from 'react-router-dom'
 
 import { SiGmail, SiFacebook, SiGithub, } from 'react-icons/si'
 import { FiPhone } from 'react-icons/fi';
+import { useAuthState } from 'react-firebase-hooks/auth'
 
 const Home = () => {
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { cart } = useCart()
+  const [user] = useAuthState(auth)
 
   useEffect(() => {
     const productsCollection = collection(db, 'products')
@@ -48,6 +50,7 @@ const Home = () => {
     return <div className="text-center py-12 text-red-500">{error}</div>
   }
 
+
   return (
     <div className="container mx-auto px-4 py-4">
       {/* hero section */}
@@ -66,28 +69,30 @@ const Home = () => {
         id="product">
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Our Products</h1>
-          <Link 
-            to="/add-product"
-            className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition"
-          >
-            Add Product
-          </Link>
+          {user?.email === "doro-chan@gmail.com" && (
+            <Link 
+              to="/add-product"
+              className="bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 transition"
+            >
+              Add Product
+            </Link>
+          )}
+          
         </div>
-
-        {products.length === 0 ? (
-          <div className="text-center py-12">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-2">No Products Available</h2>
-            <p className="text-gray-500">We haven't added any products yet. Check back soon!</p>
-          </div>
-        ) : (
-          <div className="justify-start items-center">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-              {products.map(product => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </div>
-          </div>
-        )}
+            {products.length === 0 ? (
+              <div className="text-center py-12">
+                <h2 className="text-2xl font-semibold text-gray-700 mb-2">No Products Available</h2>
+                <p className="text-gray-500">We haven't added any products yet. Check back soon!</p>
+              </div>
+            ) : (
+              <div className="justify-start items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                  {products.map(product => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
+              </div>
+            )}
       </section>
 
       {/* about section */}
@@ -126,7 +131,7 @@ const Home = () => {
                         </a>
         
                         <a 
-                            href="https://mail.google.com/mail/?view=cm&fs=1&to=marloujerezon.anhs@gmail.com&su=Inquiry" 
+                            href="https://mail.google.com/mail/?view=cm&fs=1&to=marloujerezon.anhs@gmail.com&su=Inquire" 
                             className="hover:wiggle-10 hover:scale-150 transition-all duration-300 ease-in-out" 
                             target='_blank'
                         >
