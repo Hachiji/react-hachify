@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+}
+
+section {
+    width: 100%;
+}
+
+section:not(:first-child) {
+    margin-top: 1rem;
+}

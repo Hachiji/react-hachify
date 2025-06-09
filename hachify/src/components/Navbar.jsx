@@ -1,13 +1,18 @@
 import { useState, useEffect } from 'react';
 import { FiShoppingCart, FiSearch, FiUser, FiMenu, FiX } from 'react-icons/fi';
-import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../config/Firebase';
+import { useNavigate } from 'react-router-dom'
 
 const Navbar = () => {
     const [cartOpen, setCartOpen] = useState(false);
+
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-    const navigate = useNavigate();
+
+    const isActive = false;
+
+    const navigate = useNavigate()
+
     const [user] = useAuthState(auth);
 
     const getUsernameFromEmail = (email) => {
@@ -44,16 +49,16 @@ const Navbar = () => {
         <>
             <nav className="flex flex-col md:flex-row md:justify-between p-3 bg-gray-800 sticky top-0 z-50">
                 <div className="flex items-center justify-between w-full">
-                    <button 
+                    <a 
                         className="cursor-pointer"
-                        onClick={() => navigate('/')}
+                        href="#hero"
                     >
                         <img 
                             src="src/img/doro-bg.png" 
                             alt="doro" 
                             className="w-30 h-10 rounded ml-2 md:ml-5" 
                         />
-                    </button>
+                    </a>
                     
                     <div className="relative mx-2 md:mx-4 flex-1 md:max-w-md">
                         <input 
@@ -84,26 +89,31 @@ const Navbar = () => {
 
                 <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:flex flex-col md:flex-row gap-6 list-none text-amber-300 items-center mt-4 md:mt-0 mr-0 md:mr-5`}>
                     <li>
-                        <NavLink 
-                            className={({ isActive }) => 
-                                `block py-2 hover:text-rose-500 ${isActive ? 'text-rose-500 font-medium' : ''}`
-                            } 
-                            to="/about"
+                        <a 
+                            className={`block py-2 hover:text-rose-500 ${isActive ? 'text-rose-500 font-medium' : ''}`}
+                            href="#product"
+                            onClick={() => setMobileMenuOpen(false)}
+                        >
+                            Product
+                        </a>
+                    </li>
+                    <li>
+                        <a 
+                            className={`block py-2 hover:text-rose-500 ${isActive ? 'text-rose-500 font-medium' : ''}`}
+                            href="#about"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             About
-                        </NavLink>
+                        </a>
                     </li>
                     <li>
-                        <NavLink 
-                            className={({ isActive }) => 
-                                `block py-2 hover:text-rose-500 ${isActive ? 'text-rose-500 font-medium' : ''}`
-                            } 
-                            to="/contact"
+                        <a 
+                            className={`block py-2 hover:text-rose-500 ${isActive ? 'text-rose-500 font-medium' : ''}`}
+                            href="#contact"
                             onClick={() => setMobileMenuOpen(false)}
                         >
                             Contact
-                        </NavLink>
+                        </a>
                     </li>
                     <li className="w-full md:w-auto">
                         {user ? (
@@ -113,29 +123,27 @@ const Navbar = () => {
                                         navigate('/profile');
                                         setMobileMenuOpen(false);
                                     }}
-                                    className="flex items-center gap-2 px-4 py-2 bg-indigo-500 rounded-md hover:bg-indigo-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis min-w-0"
+                                    className="flex items-center gap-2 px-4 py-2 cursor-pointer bg-indigo-500 rounded-md hover:bg-indigo-600 transition-colors whitespace-nowrap overflow-hidden text-ellipsis min-w-0"
                                 >
                                     <FiUser className="text-amber-300 flex-shrink-0" />
                                     <span className="truncate">{getUsernameFromEmail(user.email)}</span>
                                 </button>
                             </div>
                         ) : (
-                            <NavLink 
-                                className={({ isActive }) => 
-                                    `block px-4 py-2 bg-indigo-400 rounded-md hover:text-rose-400 hover:bg-indigo-500 text-center ${isActive ? 'bg-indigo-500' : ''}`
-                                } 
-                                to="/auth"
+                            <a 
+                                className={`block px-4 py-2 bg-indigo-400 rounded-md hover:text-rose-400 hover:bg-indigo-500 text-center ${isActive ? 'bg-indigo-500' : ''}`} 
+                                href="/auth"
                                 onClick={() => setMobileMenuOpen(false)}
                             >
                                 Login
-                            </NavLink>
+                            </a>
                         )}
                     </li>
                     <li>
                         <button 
                             id="cart-button"
                             onClick={toggleCart}
-                            className="p-2 hover:text-rose-500 transition-all duration-200 hidden md:block"
+                            className="p-2 cursor-pointer hover:text-rose-500 transition-all duration-200 hidden md:block"
                         >
                             <FiShoppingCart className="size-6 md:size-7 hover:animate-bounce"/>
                         </button>
